@@ -28,7 +28,7 @@ const getCurrentCoordinates = (INPUT, insideParanthesis) => {
 
   parsedCoords = INPUT.replace(/\s/g, "");
   onlyCoords = parsedCoords.match(insideParanthesis);
-  coords = sliceString(onlyCoords);
+  coords = removeParanthesis(onlyCoords);
   return (gridData.currentCoordinates = coords);
 };
 
@@ -36,7 +36,7 @@ const getCurrentCoordinates = (INPUT, insideParanthesis) => {
  * Utility function of getCurrentCoordinates
  * @param {object[]} coords 
  */
-const sliceString = (coords) => {
+const removeParanthesis = (coords) => {
   let newArray = [];
   for (let i = 0; i < coords.length; i++) {
     newArray.push(coords[i].slice(1, -1));
