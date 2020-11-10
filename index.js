@@ -3,13 +3,15 @@ const insideParanthesis = /\(\s*\d+\s*,\s*\d*\s*\)/g;
 
 const gridData = {
   currentGrid: "",
-  currentCoordinates: [],
+  coordinates: [],
+  lastCoordinate: [],
+  result : [],
 };
 
 /***
  * Add grid size to gridData object
  * @params {string} INPUT
- * @returns {gridData.currentGrid : {string}}  
+ * @returns {gridData.currentGrid : {string}}
  */
 const getCurrentGrid = (INPUT) => {
   return (gridData.currentGrid = INPUT.slice(0, 3));
@@ -17,9 +19,9 @@ const getCurrentGrid = (INPUT) => {
 
 /**
  * Removes whitespace and paranthesis from Input string
- * @param {string} INPUT 
- * @param {RegExp} insideParanthesis 
- * @returns {gridData.currentCoordinates : []}
+ * @param {string} INPUT
+ * @param {RegExp} insideParanthesis
+ * @returns {gridData.coordinates : []}
  */
 const getCurrentCoordinates = (INPUT, insideParanthesis) => {
   let onlyCoords = [],
@@ -29,12 +31,12 @@ const getCurrentCoordinates = (INPUT, insideParanthesis) => {
   parsedCoords = INPUT.replace(/\s/g, "");
   onlyCoords = parsedCoords.match(insideParanthesis);
   coords = removeParanthesis(onlyCoords);
-  return (gridData.currentCoordinates = coords);
+  return (gridData.coordinates = coords);
 };
 
 /**
  * Utility function of getCurrentCoordinates
- * @param {object[]} coords 
+ * @param {object[]} coords
  */
 const removeParanthesis = (coords) => {
   let newArray = [];
@@ -44,7 +46,34 @@ const removeParanthesis = (coords) => {
   return newArray;
 };
 
+/**
+ * Add function for two the same - double drop or carry on... ?
+ * @param {*} gridData 
+ */
+
+const deliveryMechanism = (gridData) => {
+let lastDelivery, prevSpot, splitCurrent, yAxis, xAxis, positionZero  = JSON.stringify(['0', '0']);
+  for (let i = 0; i < gridData.coordinates.length; i++) {
+    let currentCoordinate = gridData.coordinates[i].split(',');
+    
+    if(JSON.stringify(currentCoordinate) == positionZero){
+      console.log('pushed')
+      gridData.result.push('D')
+      lastDelivery = currentCoordinate;
+    } else {
+      console.log(lastDelivery,  currentCoordinate, 'sum')
+      yAxis = currentCoordinate[0] - lastDelivery[0] ;
+      xAxis = currentCoordinate[1] - lastDelivery[1] ;
+      gridData.result = [...gridData.result, yAxis, xAxis, 'D'];
+      lastDelivery = currentCoordinate
+    }
+  }
+};
+
+
+
 getCurrentGrid(INPUT);
 getCurrentCoordinates(INPUT, insideParanthesis);
+deliveryMechanism(gridData);
 
 console.log(gridData);
